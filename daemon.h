@@ -131,8 +131,8 @@ void read_iface(const char* name, char* iface)
     FILE* f = fopen(name, "rb");
 
     if (f == NULL) {
-        // defoult interface
-        strcpy(iface, "enp7s0");
+        // default interface
+        strcpy(iface, "eth0");
         return;
     }
 
