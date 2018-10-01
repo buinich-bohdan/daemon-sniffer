@@ -134,7 +134,7 @@ void read_iface(const char* name, char* iface)
 
     if (f == NULL) {
         // Set network interface by default
-        strcpy(iface, "enp7s0");
+        strcpy(iface, "eth0");
         return;
     }
 
