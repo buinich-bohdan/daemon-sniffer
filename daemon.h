@@ -75,7 +75,7 @@ void sort(struct ip_stat* statistic, const int n)
 
     for (r = n - 1; r > 0; r--) {
         for (i = 0; i < r; i++) {
-            if (statistic[i].ip_address > statistic[i + 1].ip_address) {
+            if (statistic[i].ip_address > statistic[i + 1].ip_address  && !strcmp(statistic[i].iface, statistic[i + 1].iface)) {
                 swap(&statistic[i].ip_address, &statistic[i + 1].ip_address);
                 swap(&statistic[i].counter, &statistic[i + 1].counter);
                 swapstr(statistic[i].iface, statistic[i + 1].iface);
@@ -84,15 +84,14 @@ void sort(struct ip_stat* statistic, const int n)
     }
 }
 
-void write_stat(const char* name, struct ip_stat* stat, int* size)
+void write_stat(const char* name, const struct ip_stat* stat, const int* size)
 {
     FILE* f = fopen(name, "r+b");
-    int i;
 
     if (f == NULL)
-        return;
+        f = fopen(name,"w+b");
     fwrite(size, sizeof *size, 1, f);
-    for (i = 0; i < *size; i++)
+    for (int i = 0; i < *size; i++)
         fwrite(&stat[i], sizeof(struct ip_stat), 1, f);
 
     fclose(f);
@@ -121,8 +120,7 @@ void read_stat(const char* name, struct ip_stat* stat, int* size)
 
     fread(size, sizeof(int), 1, f);
 
-    int i = 0;
-    for (i = 0; i < *size; i++)
+    for (int i = 0; i < *size; i++)
         fread(&stat[i], sizeof(struct ip_stat), 1, f);
 
     fclose(f);
@@ -133,8 +131,8 @@ void read_iface(const char* name, char* iface)
     FILE* f = fopen(name, "rb");
 
     if (f == NULL) {
-        // Set network interface by default
-        strcpy(iface, "eth0");
+        // defoult interface
+        strcpy(iface, "enp7s0");
         return;
     }
 
@@ -143,7 +141,7 @@ void read_iface(const char* name, char* iface)
 }
 
 //log(n)
-int search_ip(struct ip_stat* stat, int size, unsigned ip_addr)
+int search_ip(const struct ip_stat* stat, const int size,const unsigned ip_addr)
 {
     int min = 0, max = size - 1, i;
 

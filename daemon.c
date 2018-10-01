@@ -3,7 +3,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-void process_packet(unsigned char* buffer, struct ip_stat* stat, int* n, char* iface);
+void process_packet(unsigned char* buffer, struct ip_stat* stat, int* n, char iface[20  ]);
 
 int main()
 {
@@ -42,7 +42,7 @@ int main()
 
     struct ip_stat* stat = malloc(65536);
     int stat_size = 0;
-    char* iface = malloc(20);
+    char iface[20];
     char *path_stat = "stat", *path_iface = "iface";
     
     read_stat(path_stat, stat, &stat_size);
@@ -51,7 +51,7 @@ int main()
     sock_raw = socket(AF_INET, SOCK_RAW, IPPROTO_TCP);
 
     // Set specific interface
-    setsockopt(sock_raw, SOL_SOCKET, SO_BINDTODEVICE, iface, 4);
+    setsockopt(sock_raw, SOL_SOCKET, SO_BINDTODEVICE, iface, strlen(iface));
 
     if (sock_raw < 0) {
         printf("Socket Error\n");
@@ -76,22 +76,22 @@ int main()
 
         write_stat(path_stat, stat, &stat_size);
     }
+
 }
-   void process_packet(unsigned char* buffer, struct ip_stat* stat, int* n, char* iface)
+   void process_packet(unsigned char* buffer, struct ip_stat* stat, int* n, char iface[20])
     {
         struct iphdr* iph = (struct iphdr*)buffer;
         int i;
 
         for (i = 0; i < *n; i++)
-            if (stat[i].ip_address == iph->saddr) {
+            if (stat[i].ip_address == iph->saddr && !strcmp(stat[i].iface,iface)) {
                 stat[i].counter++;
                 return;
             }
 
         stat[i].ip_address = iph->saddr;
         stat[i].counter = 1;
-        for (int y = 0; y < 20; ++y)
-            stat[i].iface[y] = iface[y];
+        strcpy(stat[i].iface, iface);
         (*n)++;
 
         sort(stat, *n);

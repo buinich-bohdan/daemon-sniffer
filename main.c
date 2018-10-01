@@ -49,11 +49,11 @@ int main(int argc, char* argv[])
         struct ip_stat* stat = malloc(65536);
         int stat_size = 0;
         read_stat(path_stat, stat, &stat_size);
-
+        int n;
         // read passed argument of IP address
         unsigned ip = inet_addr(argv[2]);
-
-        printf("Count: %d\n", search_ip(stat, stat_size, ip));
+    
+        printf("Count packets: %d\n", search_ip(stat, stat_size, ip));
         free(stat);
     }
     else if (argc >= 3 && !strcmp(argv[1], "selIface")) {
