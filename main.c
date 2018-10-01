@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
     }
     else if (!strcmp(argv[1], "start")) {
         printf("Starting daemon...\n");
-        system("./daemon");
+        system("sudo ./daemon");
     }
     else if (!strcmp(argv[1], "stop")) {
         printf("Stoppping daemon...\n");
@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
                 res = true;
                 write_iface(path_iface, iface);
                 printf("Starting daemon...\n");
-                system("./daemon");
+                system("sudo ./daemon");
                 break;
             }
         }
