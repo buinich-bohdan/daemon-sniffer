@@ -43,7 +43,7 @@ int main()
     struct ip_stat* stat = malloc(65536);
     int stat_size = 0;
     char iface[20];
-    char *path_stat = "stat", *path_iface = "iface";
+    const char *path_stat = "stat", *path_iface = "iface";
     
     read_stat(path_stat, stat, &stat_size);
     read_iface(path_iface, iface);

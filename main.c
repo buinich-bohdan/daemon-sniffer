@@ -15,7 +15,7 @@ void getInterfaces();
 
 int main(int argc, char* argv[])
 {
-    char *path_stat = "stat", *path_iface = "iface";
+    const char *path_stat = "stat", *path_iface = "iface";
     system("rm iface  2> /dev/null");
     getInterfaces();
     if (argc < 2) {
@@ -39,11 +39,12 @@ int main(int argc, char* argv[])
     }
     else if (!strcmp(argv[1], "start")) {
         printf("Starting daemon...\n");
+        system("sudo kill `pidof ./daemon` 2> /dev/null");
         system("sudo ./daemon");
     }
     else if (!strcmp(argv[1], "stop")) {
         printf("Stoppping daemon...\n");
-        system("kill `pidof ./daemon` 2> /dev/null");
+        system("sudo kill `pidof ./daemon` 2> /dev/null");
     }
     else if (argc >= 3 && !strcmp(argv[1], "showCnt")) {
         struct ip_stat* stat = malloc(65536);
@@ -63,6 +64,7 @@ int main(int argc, char* argv[])
                 strcpy(iface, argv[2]);
                 res = true;
                 write_iface(path_iface, iface);
+                system("sudo kill `pidof ./daemon` 2> /dev/null");
                 printf("Starting daemon...\n");
                 system("sudo ./daemon");
                 break;
