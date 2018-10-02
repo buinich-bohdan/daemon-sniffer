@@ -1,17 +1,10 @@
-#include <stdio.h>
-#include <string.h>
-#include <ifaddrs.h> //for interfaces
-#include <stdlib.h> //exit
-#include <stdbool.h>
-#include <arpa/inet.h>
-#include <zconf.h>
-
 #include "daemon.h"
+
 char iface[20];
 char ifaces[20][20];
 int countIfaces = 0;
 
-void getInterfaces();
+static void getInterfaces();
 
 int main(int argc, char* argv[])
 {
@@ -39,7 +32,6 @@ int main(int argc, char* argv[])
     }
     else if (!strcmp(argv[1], "start")) {
         printf("Starting daemon...\n");
-        system("sudo kill `pidof ./daemon` 2> /dev/null");
         system("sudo ./daemon");
     }
     else if (!strcmp(argv[1], "stop")) {
@@ -53,7 +45,7 @@ int main(int argc, char* argv[])
         int n;
         // read passed argument of IP address
         unsigned ip = inet_addr(argv[2]);
-    
+
         printf("Count packets: %d\n", search_ip(stat, stat_size, ip));
         free(stat);
     }
@@ -64,7 +56,6 @@ int main(int argc, char* argv[])
                 strcpy(iface, argv[2]);
                 res = true;
                 write_iface(path_iface, iface);
-                system("sudo kill `pidof ./daemon` 2> /dev/null");
                 printf("Starting daemon...\n");
                 system("sudo ./daemon");
                 break;
@@ -88,7 +79,7 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-void getInterfaces()
+static void getInterfaces()
 {
     struct ifaddrs *ifaddr, *ifa;
     int n;

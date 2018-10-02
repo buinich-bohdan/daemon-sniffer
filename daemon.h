@@ -1,11 +1,20 @@
 #ifndef TEST_DAEMON_H
 #define TEST_DAEMON_H
 
-#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <ifaddrs.h> //for interfaces
+#include <stdlib.h> //exit
+#include <errno.h>
+#include <unistd.h>
+#include <stdbool.h>
+#include <zconf.h>
 #include <arpa/inet.h>
 #include <netinet/ip_icmp.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/file.h>
+
 
 struct ip_stat {
     unsigned int ip_address;
